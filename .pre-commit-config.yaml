@@ -26,7 +26,7 @@ repos:
       - id: nbqa-flake8
 
 default_language_version:
-  python: "3.12"
+  python: "3.11"
 
 default_stages: [pre-commit]
 exclude: ^\.tslvenv/
