@@ -1,0 +1,5 @@
+outs:
+- md5: 1c41e7491cd4e2770efe297528e14257
+  size: 1288232
+  hash: md5
+  path: SPY_arima_model.pkl

@@ -1,0 +1,5 @@
+outs:
+- md5: 99cb15cfb83564446d10ac27b1eb7d2f
+  size: 1293170
+  hash: md5
+  path: BND_arima_model.pkl
