@@ -73,7 +73,7 @@
 
 ### Prerequisites
 
-- Python 3.8 or newer (Python 3.12 recommended)
+- Python 3.8 or newer (Python 3.11 recommended)
 - `pip` (Python package manager)
 - [DVC](https://dvc.org/) (for data version control)
 - [Git](https://git-scm.com/)
