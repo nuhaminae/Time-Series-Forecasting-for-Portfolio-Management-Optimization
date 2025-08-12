@@ -1,0 +1,5 @@
+outs:
+- md5: 129582946bd3b9f08ab762424f174e85
+  size: 236694
+  hash: md5
+  path: TSLA_stock_price.csv
