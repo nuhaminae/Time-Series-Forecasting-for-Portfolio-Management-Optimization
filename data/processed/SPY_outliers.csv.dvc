@@ -1,0 +1,5 @@
+outs:
+- md5: 6d445d857852258b9ba775e42a8858f6
+  size: 17873
+  hash: md5
+  path: SPY_outliers.csv

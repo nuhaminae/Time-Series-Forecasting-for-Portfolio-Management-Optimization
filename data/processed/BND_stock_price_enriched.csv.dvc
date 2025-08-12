@@ -1,0 +1,5 @@
+outs:
+- md5: 97ec02387698ef4f42f1b2697704cec4
+  size: 373923
+  hash: md5
+  path: BND_stock_price_enriched.csv

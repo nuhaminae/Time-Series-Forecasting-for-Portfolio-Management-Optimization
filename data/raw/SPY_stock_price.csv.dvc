@@ -1,0 +1,5 @@
+outs:
+- md5: bf9607ee7f2a3d54c2f803598fc576b4
+  size: 239963
+  hash: md5
+  path: SPY_stock_price.csv

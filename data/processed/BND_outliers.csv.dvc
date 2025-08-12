@@ -1,0 +1,5 @@
+outs:
+- md5: 07ac51af3f282238c78c44aaf68d1946
+  size: 14254
+  hash: md5
+  path: BND_outliers.csv
