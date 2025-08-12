@@ -1,0 +1,5 @@
+outs:
+- md5: 2d9720fd2581ebe8e51dff15ed6c49b5
+  size: 299772
+  hash: md5
+  path: BND_lstm_model.pkl

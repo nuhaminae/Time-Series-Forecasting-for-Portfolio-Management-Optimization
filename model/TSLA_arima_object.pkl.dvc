@@ -1,0 +1,5 @@
+outs:
+- md5: f0d13e1fd9d79e37b3956dd927b275ce
+  size: 6222651
+  hash: md5
+  path: TSLA_arima_object.pkl
