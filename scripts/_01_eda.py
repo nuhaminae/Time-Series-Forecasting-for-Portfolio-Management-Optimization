@@ -182,84 +182,70 @@ class EDA:
     # ---- Calculate Trend, Volatility, and Return---- #
     def compute_stats(self):
         """
-        Computes rolling mean and standard deviation of the 'Close' column.
-        Computes the log returns of the 'Price' column.
+        Computes rolling mean, standard deviation and return of the 'Close' column.
         The rolling window size is determined by `self.rolling_window`.
-        Adds 'Trend' and 'Volatility' columns to the DataFrame.
-        Adds a 'Return' column to the DataFrame.
-        Log return is calculated as log(P_t) - log(P_t-1).
+        Adds 'Trend', 'Volatility', 'Daily Return' columns to the DataFrame.
         """
+
         self.df["Trend"] = self.df["Close"].rolling(window=self.rolling_window).mean()
         self.df["Volatility"] = (
             self.df["Close"].rolling(window=self.rolling_window).std()
         )
-        self.df["Return"] = np.log(self.df["Close"]) - np.log(self.df["Close"].shift(1))
+        self.df["Daily Return"] = self.df["Close"].pct_change()
+
         return self.df
 
     # ------ Plot Close, Rolling Mean and, Rolling Std----- #
     def plot_stats(self):
         """
         Plots the rolling mean and rolling standard deviation of the 'Close' column.
-        Plots the log returns of closing price prices over time.
+        Plots the daily returns of closing price prices over time.
 
         Saves the plot to the specified plot directory.
         """
-        # Plot rolling mean (Trend) overlay
-        self.df[["Close", "Trend"]].plot(
-            title=f"{self.stock_name} - Closing Price and Trend Overlay",
-            figsize=(12, 4),
-        )
-        plt.xlabel("Date")
-        plt.xticks(rotation=0)
-        plt.grid()
-        plt.tight_layout()
 
-        if self.plot_dir:
-            plot_path = os.path.join(
-                self.plot_dir,
-                f"{self.stock_name}_closing_price_rolling_mean_overlay.png",
-            )
-            plt.savefig(plot_path)
-            print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
-
-        plt.show()
-        plt.close()
-
-        # Plot rolling standard deviation (volatility)
-        self.df["Volatility"].plot(
-            title=f"{self.stock_name} - Volatility (Rolling Standard Deviation)",
+        fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
+        # Plot Closing Price and Trend
+        ax1.plot(self.df.index, self.df["Close"], label="Closing Price")
+        ax1.plot(
+            self.df.index,
+            self.df["Trend"],
+            label="Trend (Moving Average)",
             color="orange",
-            figsize=(12, 4),
         )
-        plt.xlabel("Date")
-        plt.xticks(rotation=0)
-        plt.ylabel("Volatility")
-        plt.grid()
-        plt.tight_layout()
+        ax1.set_ylabel("Price")
+        ax1.set_title(
+            f"{self.stock_name} - Closing Price, Trend, Return and Volatility "
+        )
+        ax1.legend(loc="upper left")
+        ax1.grid(True)
 
+        # Plot Volatility
+        ax2.plot(
+            self.df.index,
+            self.df["Volatility"],
+            label="Volatility (Rolling Std)",
+            color="Red",
+        )
+        ax2.set_ylabel("Volatility")
+        ax2.set_xlabel("Date")
+        ax2.legend(loc="upper left")
+        ax2.grid(True)
+
+        # Plot Return
+        ax3.plot(
+            self.df.index, self.df["Daily Return"], label="Daily Return", color="Purple"
+        )
+        ax3.set_ylabel("Daily Return")
+        ax3.set_xlabel("Date")
+        ax3.legend(loc="upper left")
+        ax3.grid(True)
+
+        # Adjust layout and show plot
+        plt.tight_layout()
         if self.plot_dir:
             plot_path = os.path.join(
-                self.plot_dir, f"{self.stock_name}_volatility_(rolling_std_dev).png"
-            )
-            plt.savefig(plot_path)
-            print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
-
-        plt.show()
-        plt.close()
-
-        # Plot Log Return
-        self.df["Return"].plot(
-            title=f"{self.stock_name} - Log Return of Closing Price", figsize=(12, 4)
-        )
-        plt.ylabel("Return (Log Return)")
-        plt.xlabel("Date")
-        plt.xticks(rotation=0)
-        plt.grid()
-        plt.tight_layout()
-
-        if self.plot_dir:
-            plot_path = os.path.join(
-                self.plot_dir, f"{self.stock_name}_log_return_of_close_price.png"
+                self.plot_dir, f"{self.stock_name}_close_trend_vol_return.png"
             )
             plt.savefig(plot_path)
             print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
@@ -293,8 +279,8 @@ class EDA:
             threshold (int, optional): The z-score threshold for outlier detection.
             Defaults to 2.
         """
-        z_scores = (self.df["Return"] - self.df["Return"].mean()) / self.df[
-            "Return"
+        z_scores = (self.df["Daily Return"] - self.df["Daily Return"].mean()) / self.df[
+            "Daily Return"
         ].std()
         outliers = self.df[np.abs(z_scores) > threshold]
         print(f"🔍 Found {len(outliers)} outlier days with |z| > {threshold}")
@@ -306,20 +292,22 @@ class EDA:
         outliers.to_csv(output_path, index=True)
         print(f"\n💾 Outlier DataFrame saved to {self.safe_relpath(output_path)}.")
 
-        outliers["Return"].plot(
-            title=f"{self.stock_name} - Outlier Log Return of Closing Price",
-            figsize=(12, 4),
+        # Plot Daily Returns with outliers highlighted
+        plt.figure(figsize=(12, 4))
+        plt.scatter(self.df.index, self.df["Daily Return"], label="Normal", alpha=0.5)
+        plt.scatter(
+            outliers.index, outliers["Daily Return"], color="red", label="Outliers"
         )
-        plt.ylabel("Return (Log Return)")
+        plt.title(f"{self.stock_name} - Daily Returns with Outliers Highlighted")
+        plt.ylabel("Daily Return")
         plt.xlabel("Date")
-        plt.xticks(rotation=0)
-        plt.grid()
+        plt.legend()
+        plt.grid(True)
         plt.tight_layout()
 
         if self.plot_dir:
             plot_path = os.path.join(
-                self.plot_dir,
-                f"{self.stock_name}_outlier_log_return_of_close_price.png",
+                self.plot_dir, f"{self.stock_name}_daily_return_outlier.png"
             )
             plt.savefig(plot_path)
             print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
@@ -332,10 +320,33 @@ class EDA:
         Computes and prints Value at Risk (VaR) at 95% confidence level and
         the Sharpe Ratio for the 'Return' column.
         """
-        var_95 = np.percentile(self.df["Return"].dropna(), 5)
-        sharpe = self.df["Return"].mean() / self.df["Return"].std()
+        var_95 = np.percentile(self.df["Daily Return"].dropna(), 5)
+        sharpe = self.df["Daily Return"].mean() / self.df["Daily Return"].std()
         print(f"📉 Value at Risk (95%): {var_95:.4f}")
         print(f"📈 Sharpe Ratio: {sharpe:.4f}")
+
+        # Plot the distribution of daily returns with VaR line
+        plt.figure(figsize=(10, 4))
+        sns.histplot(self.df["Daily Return"], bins=100, kde=True, color="skyblue")
+        plt.axvline(
+            self.df["Daily Return"].mean(), color="black", linestyle="--", label="Mean"
+        )
+        plt.axvline(var_95, color="red", linestyle="--", label="VaR (95%)")
+        plt.title(f"{self.stock_name} - Distribution of Daily Returns")
+        plt.xlabel("Daily Return")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+
+        if self.plot_dir:
+            plot_path = os.path.join(
+                self.plot_dir, f"{self.stock_name}_daily_return_distribution.png"
+            )
+            plt.savefig(plot_path)
+            print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
+
+        plt.show()
+        plt.close()
 
     # ---- Save Processed DataFrame-----#
     def get_processed_data(self):
@@ -376,7 +387,7 @@ class EDA:
         self.run_stationarity_tests("Close")
         self.compute_stats()
         self.plot_stats()
-        self.run_stationarity_tests("Return")
+        self.run_stationarity_tests("Daily Return")
         self.detect_outliers()
         self.compute_risk_metrics()
         self.get_processed_data()
