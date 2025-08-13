@@ -263,7 +263,7 @@ dvc pull
 
 ### LSTM Forecasting: Log Return Prediction (TSLA)
 
-![LSTM TSLA](insights/model/TSLA_stock_price_return_prediction_lstm.png)
+![LSTM TSLA](insights/model/TSLA_stock_price_prediction_lstm.png)
 
 - **Actual vs. Predicted Behavior:**
   - The green line (actual return) shows high-frequency fluctuations and volatility across the time horizon.
@@ -303,7 +303,7 @@ dvc pull
 
 ### LSTM Forecasting: Log Return Prediction (SPY)
 
-![LSTM SPY](insights/model/SPY_stock_price_return_prediction_lstm.png)
+![LSTM SPY](insights/model/SPY_stock_price_prediction_lstm.png)
 
 - **Prediction Accuracy:**
   - The red dashed line (Predicted Return) closely tracks the green line (Actual Return), especially in the mid-range of the forecast window.
@@ -323,7 +323,7 @@ dvc pull
 
 ### ARIMA Forecasting: Log Return Prediction (BND)
 
-![ARIMA BND](insights/model/SPY_stock_price_return_prediction_lstm.png)
+![ARIMA BND](insights/model/BND_stock_price_return_prediction_arima.png)
 
 - **Model Structure:**
   - Trained on historical log returns (blue line), with predictions starting post-index ~2000.
@@ -342,7 +342,7 @@ dvc pull
 
 ### LSTM Forecasting: Log Return Prediction (BND)
 
-![LSTM BND](insights/model/BND_stock_price_return_prediction_lstm.png)
+![LSTM BND](insights/model/BND_stock_price_prediction_lstm.png)
 
 - **Prediction Accuracy:**
   - The red dashed line (Predicted Return) closely follows the green line (Actual Return), especially in the early and mid-range of the forecast window.
