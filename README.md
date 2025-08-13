@@ -243,7 +243,7 @@ dvc pull
 
 ### ARIMA Forecasting: Log Return Prediction (TSLA)
 
-![ARIMA TSLA](insights/model/TSLA_stock_price_return_prediction_arima.png)
+![ARIMA TSLA](insights/model/TSLA_stock_price_prediction_arima.png)
 
 - **Training vs. Forecast Window:**
   - The blue line represents training data used to fit the ARIMA model, ending around the 2000th time index.
@@ -283,7 +283,7 @@ dvc pull
 
 ### ARIMA Forecasting: Log Return Prediction (SPY)
 
-![ARIMA SPY](insights/model/SPY_stock_price_return_prediction_arima.png)
+![ARIMA SPY](insights/model/SPY_stock_price_prediction_arima.png)
 
 - **Training vs. Prediction Window:**
   - The blue line (Training Data) spans up to the 2000th time index, used to fit the ARIMA model.
@@ -323,7 +323,7 @@ dvc pull
 
 ### ARIMA Forecasting: Log Return Prediction (BND)
 
-![ARIMA BND](insights/model/BND_stock_price_return_prediction_arima.png)
+![ARIMA BND](insights/model/BND_stock_price_prediction_arima.png)
 
 - **Model Structure:**
   - Trained on historical log returns (blue line), with predictions starting post-index ~2000.
