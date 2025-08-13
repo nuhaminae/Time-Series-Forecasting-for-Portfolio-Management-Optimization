@@ -26,9 +26,7 @@ class EDA:
                                         Defaults to 180.
     """
 
-    def __init__(
-        self, stock_name, raw_dir, processed_dir, plot_dir, rolling_window=180
-    ):
+    def __init__(self, stock_name, raw_dir, processed_dir, plot_dir, rolling_window=1):
         self.stock_name = stock_name
         self.raw_dir = raw_dir
         self.processed_dir = processed_dir
