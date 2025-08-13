@@ -1,6 +1,7 @@
 # _02_forecasting_model_ARIMA.py
 
 import os
+import warnings
 from math import sqrt
 
 import joblib
@@ -10,6 +11,8 @@ from IPython.display import display
 from pmdarima.arima import auto_arima
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from statsmodels.tsa.arima.model import ARIMA
+
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 class TimeSeriesForecastingARIMA:
