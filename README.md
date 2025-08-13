@@ -184,7 +184,7 @@ dvc pull
 
 ### TimeSeries Insights: TSLA Closing Price & Trend
 
-![Price and Trend TSLA](insights/eda/TSLA_closing_price_rolling_mean_overlay.png)
+![Price Trend Vol TSLA](insights/eda/TSLA_close_trend_vol_return.png)
 
 - **Long-Term Growth Surge (2020–2021):**
   - TSLA experienced a dramatic price increase starting in early 2020, peaking in late 2021.
@@ -204,7 +204,7 @@ dvc pull
 
 ### Trend Analysis: SPY Closing Price
 
-![Price and Trend SPY](insights/eda/SPY_closing_price_rolling_mean_overlay.png)
+![Price Trend Vol TSLA](insights/eda/SPY_close_trend_vol_return.png)
 
 - **Strong Upward Trajectory:**
   - SPY’s closing price shows a consistent rise from 2016 to late 2021, peaking near $480.
@@ -223,7 +223,7 @@ dvc pull
 
 ### Trend Analysis: BND Closing Price
 
-![Price and Trend BND](insights/eda/BND_closing_price_rolling_mean_overlay.png)
+![Price Trend Vol TSLA](insights/eda/BND_close_trend_vol_return.png)
 
 - **Long-Term Stability:**
   - BND’s closing price fluctuates within a relatively narrow band (≈ $60–$77.5) over the decade.
