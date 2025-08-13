@@ -1,11 +1,13 @@
 # _03_forecasting_model_LSTM.py
 
 import os
+import random
 
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 from IPython.display import display
 from keras.layers import LSTM, Dense, Dropout, Input
 from keras.models import Sequential
@@ -20,7 +22,7 @@ class TimeSeriesForecastingLSTM:
 
     def __init__(self, stock_name, processed_dir, plot_dir, model_dir):
         """
-        Initializes the TimeSeriesForecastingLSTM class.
+        Initialises the TimeSeriesForecastingLSTM class.
 
         Args:
             stock_name (str): The name of the stock.
@@ -44,7 +46,17 @@ class TimeSeriesForecastingLSTM:
             os.makedirs(self.model_dir)
 
         print("🧪 Running full forecasting pipeline...\n")
+        self.set_seed(42)
         self.load_data()
+
+    def set_seed(self, seed=42):
+        """
+        Sets random seed for reproducibility across NumPy, random, and TensorFlow.
+        """
+        os.environ["PYTHONHASHSEED"] = str(seed)
+        random.seed(seed)
+        np.random.seed(seed)
+        tf.random.set_seed(seed)
 
     def safe_relpath(self, path, start=None):
         """
@@ -89,7 +101,7 @@ class TimeSeriesForecastingLSTM:
                     "Volume": "int",
                     "Trend": "float",
                     "Volatility": "float",
-                    "Return": "float",
+                    "Daily Return": "float",
                 }
 
                 for col, dtype in dict_col.items():
@@ -139,8 +151,7 @@ class TimeSeriesForecastingLSTM:
         """
         # LSTM Forecasting
 
-        # Iterate through each stock in df
-        stock_data = self.df["Return"].dropna()
+        stock_data = self.df["Trend"].dropna()
 
         # Split data into training and testing sets
         # Before MinMax fiting to avoid data bleeding
@@ -157,7 +168,7 @@ class TimeSeriesForecastingLSTM:
         )  # transform only (avoids data bleeding)
 
         # Function call
-        look_back = 180  # 180 days look back
+        look_back = 30  # 30 days look back
         X_train, Y_train = self.create_dataset(scaled_data, look_back)
         X_test, Y_test = self.create_dataset(scaled_data_test, look_back)
 
@@ -210,11 +221,9 @@ class TimeSeriesForecastingLSTM:
         r2 = r2_score(Y_test, predictions)
         print(f"Test R-squared for : {r2:.2f}")  # rounded to two decimal place
 
-        Y_test = scaler.inverse_transform(Y_test.reshape(-1, 1)).flatten()
-
         # Store predictions and actual values for plotting and model for finetuning
         self.lstm_results = {
-            "predictions": predictions.flatten(),
+            "predictions": predictions,
             "actual": Y_test,
             "X_train": X_train,
             "X_test": X_test,
@@ -236,34 +245,29 @@ class TimeSeriesForecastingLSTM:
 
     def plot_lstm(self):
         """
-        Generates and saves plots of the actual and predicted stock returns
-        and closing prices.
+        Generates and saves plots of the actual and predicted stock trend
         """
-        # Get data from the above cell
-        stock_data = self.df["Return"].dropna()
 
         test = self.lstm_results["actual"]
         predictions = self.lstm_results["predictions"]
-        X_train = self.lstm_results["X_train"]
-        X_test = self.lstm_results["X_test"]
 
-        test_dates = stock_data.index[len(X_train) : len(X_train) + len(X_test)]
+        test_dates = self.df["Date"].iloc[-len(test) :]
 
-        # Return prediction plot
+        # Trend prediction plot
         plt.figure(figsize=(12, 4))
-        plt.plot(test_dates, test, label="Actual Return", color="Green")
+        plt.plot(test_dates, test, label="Actual Price Trend", color="Green")
         plt.plot(
             test_dates,
             predictions,
-            label="Predicted Return",
+            label="Predicted Price Trend",
             color="Red",
             linestyle="--",
         )
 
-        plt.title(f"{self.stock_name} - Log Return Stock Price Prediction with LSTM")
+        plt.title(f"{self.stock_name} - Stock Price Trend Prediction with LSTM")
         plt.tick_params(axis="x", rotation=0)
         plt.xlabel("Date")
-        plt.ylabel("Return")
+        plt.ylabel("Price Trend")
         plt.legend()
         plt.grid()
         plt.tight_layout()
@@ -271,50 +275,7 @@ class TimeSeriesForecastingLSTM:
         if self.plot_dir:
             plot_path = os.path.join(
                 self.plot_dir,
-                f"{self.stock_name}_stock_price_return_prediction_lstm.png",
-            )
-            plt.savefig(plot_path)
-            print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
-
-        plt.show()
-        plt.close()
-
-        # Closing price prediction plot
-        # Get the last known closing price before test period
-        last_train_index = len(self.lstm_results["X_train"]) - 1
-        last_close_price = self.df["Close"].iloc[last_train_index]
-
-        # Reconstruct predicted closing prices
-        predicted_close_price = last_close_price * np.exp(np.cumsum(predictions))
-
-        # Reconstruct actual closing prices from log returns
-        actual_close_price = last_close_price * np.exp(np.cumsum(test))
-
-        plt.figure(figsize=(12, 4))
-        plt.plot(test_dates, actual_close_price, label="Actual Price", color="Green")
-        plt.plot(
-            test_dates,
-            predicted_close_price,
-            label="Predicted Price",
-            color="Red",
-            linestyle="--",
-        )
-
-        plt.title(
-            f"{self.stock_name} - Closing Stock Price Prediction with LSTM \
-            (Reconstructed from Log Returns)"
-        )
-        plt.tick_params(axis="x", rotation=0)
-        plt.xlabel("Date")
-        plt.ylabel("Closing Price")
-        plt.legend()
-        plt.grid()
-        plt.tight_layout()
-
-        if self.plot_dir:
-            plot_path = os.path.join(
-                self.plot_dir,
-                f"{self.stock_name}_closing_stock_price_prediction_lstm.png",
+                f"{self.stock_name}_stock_price_prediction_lstm.png",
             )
             plt.savefig(plot_path)
             print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
