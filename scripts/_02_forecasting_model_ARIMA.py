@@ -145,7 +145,7 @@ class TimeSeriesForecastingARIMA:
             dict: A dictionary containing training data, testing data, and predictions.
         """
         # data
-        data = self.df["Trend"].dropna()
+        data = self.df["Daily Return"].dropna()
 
         # Split data into train and test sets
         size = int(len(data) * 0.8)
@@ -218,22 +218,22 @@ class TimeSeriesForecastingARIMA:
         test = self.arima_results["test"]
         predictions = self.arima_results["predictions"]
 
-        # Trend prediction plot
+        # Daily Return prediction plot
         plt.figure(figsize=(12, 4))
         plt.plot(train.index, train.values, label="Training Data", color="Blue")
-        plt.plot(test.index, test.values, label="Actual Trend", color="Green")
+        plt.plot(test.index, test.values, label="Actual Daily Return", color="Green")
         plt.plot(
             test.index,
             predictions,
-            label="Predicted Trend",
+            label="Predicted Daily Return",
             color="Red",
             linestyle="--",
         )
 
-        plt.title(f"{self.stock_name} - Stock Price Trend Prediction with ARIMA")
+        plt.title(f"{self.stock_name} - Stock Price Daily Return Prediction with ARIMA")
         plt.tick_params(axis="x", rotation=0)
         plt.xlabel("Date")
-        plt.ylabel("Trend")
+        plt.ylabel("Daily Return")
         plt.legend()
         plt.grid()
         plt.tight_layout()
