@@ -5,7 +5,6 @@ from math import sqrt
 
 import joblib
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 from IPython.display import display
 from pmdarima.arima import auto_arima
@@ -80,6 +79,8 @@ class TimeSeriesForecastingARIMA:
                 self.df = self.df.iloc[2:]
                 self.df = self.df.rename(columns={"Price": "Date"})
                 self.df["Date"] = pd.to_datetime(self.df["Date"])
+                self.df.set_index("Date", inplace=True)
+
                 # Correct data types
                 dict_col = {
                     "Date": "datetime",
@@ -90,7 +91,7 @@ class TimeSeriesForecastingARIMA:
                     "Volume": "int",
                     "Trend": "float",
                     "Volatility": "float",
-                    "Return": "float",
+                    "Daily Return": "float",
                 }
 
                 for col, dtype in dict_col.items():
@@ -144,7 +145,7 @@ class TimeSeriesForecastingARIMA:
             dict: A dictionary containing training data, testing data, and predictions.
         """
         # data
-        data = self.df["Return"].dropna()
+        data = self.df["Trend"].dropna()
 
         # Split data into train and test sets
         size = int(len(data) * 0.8)
@@ -217,22 +218,22 @@ class TimeSeriesForecastingARIMA:
         test = self.arima_results["test"]
         predictions = self.arima_results["predictions"]
 
-        # Return prediction plot
+        # Trend prediction plot
         plt.figure(figsize=(12, 4))
         plt.plot(train.index, train.values, label="Training Data", color="Blue")
-        plt.plot(test.index, test.values, label="Actual Return", color="Green")
+        plt.plot(test.index, test.values, label="Actual Trend", color="Green")
         plt.plot(
             test.index,
             predictions,
-            label="Predicted Return",
+            label="Predicted Trend",
             color="Red",
             linestyle="--",
         )
 
-        plt.title(f"{self.stock_name} - Log Return Stock Price Prediction with ARIMA")
+        plt.title(f"{self.stock_name} - Stock Price Trend Prediction with ARIMA")
         plt.tick_params(axis="x", rotation=0)
         plt.xlabel("Date")
-        plt.ylabel("Return")
+        plt.ylabel("Trend")
         plt.legend()
         plt.grid()
         plt.tight_layout()
@@ -240,49 +241,7 @@ class TimeSeriesForecastingARIMA:
         if self.plot_dir:
             plot_path = os.path.join(
                 self.plot_dir,
-                f"{self.stock_name}_stock_price_return_prediction_arima.png",
-            )
-            plt.savefig(plot_path)
-            print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
-
-        plt.show()
-        plt.close()
-
-        # Closing price prediction plot
-        # Get the last known closing price before test period
-        last_close_price = self.df["Close"].iloc[self.arima_results["train"].index[-1]]
-
-        # Reconstruct predicted closing prices
-        predicted_close_price = last_close_price * np.exp(np.cumsum(predictions))
-
-        # Reconstruct actual closing prices from log returns
-        actual_close_price = last_close_price * np.exp(np.cumsum(test.values))
-
-        plt.figure(figsize=(12, 4))
-        plt.plot(test.index, actual_close_price, label="Actual Price", color="Green")
-        plt.plot(
-            test.index,
-            predicted_close_price,
-            label="Predicted Price",
-            color="Red",
-            linestyle="--",
-        )
-
-        plt.title(
-            f"{self.stock_name} - Closing Stock Price Prediction with ARIMA \
-                (Reconstructed from Log Returns)"
-        )
-        plt.tick_params(axis="x", rotation=0)
-        plt.xlabel("Date")
-        plt.ylabel("Closing Price")
-        plt.legend()
-        plt.grid()
-        plt.tight_layout()
-
-        if self.plot_dir:
-            plot_path = os.path.join(
-                self.plot_dir,
-                f"{self.stock_name}_closing_stock_price_prediction_arima.png",
+                f"{self.stock_name}_stock_price_prediction_arima.png",
             )
             plt.savefig(plot_path)
             print(f"\n💾 Plot saved to {self.safe_relpath(plot_path)}")
