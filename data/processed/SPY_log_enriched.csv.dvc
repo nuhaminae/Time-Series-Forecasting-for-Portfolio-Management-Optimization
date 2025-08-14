@@ -1,0 +1,5 @@
+outs:
+- md5: 0dbc2d8ff1a750de02333bc57eac6059
+  size: 437307
+  hash: md5
+  path: SPY_log_enriched.csv
