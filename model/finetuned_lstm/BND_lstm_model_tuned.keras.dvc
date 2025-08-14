@@ -1,0 +1,5 @@
+outs:
+- md5: c71c017ad6e8a7ae3c45390664aabe78
+  size: 1424992
+  hash: md5
+  path: BND_lstm_model_tuned.keras
