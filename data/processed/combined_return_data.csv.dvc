@@ -1,0 +1,5 @@
+outs:
+- md5: a3a4530a57db6b9beb3a57cd171e1369
+  size: 17435
+  hash: md5
+  path: combined_return_data.csv
