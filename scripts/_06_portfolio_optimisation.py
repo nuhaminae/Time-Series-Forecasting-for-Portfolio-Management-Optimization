@@ -27,7 +27,7 @@ class PortfolioOptimiser:
         spy_path (str): Path to the SPY historical data CSV file.
         tsla_path (str): Path to the TSLA historical or forecasted data CSV file.
         plot_dir (str): Directory to save generated plots.
-        prediction_df (pd.DataFrame): DataFrame containing forecasted data.
+        forecasted_df (pd.DataFrame): DataFrame containing forecasted data.
         bnd_df (pd.DataFrame): DataFrame containing BND historical data.
         spy_df (pd.DataFrame): DataFrame containing SPY historical data.
         tsla_df (pd.DataFrame): DataFrame containing TSLA historical data.
@@ -47,7 +47,7 @@ class PortfolioOptimiser:
         spy_path,
         tsla_path,
         plot_dir,
-        col="Predicted Return",
+        col="Forecasted Return",
     ):
         """
         Initialises the PortfolioOptimiser with data paths and plot directory.
@@ -58,7 +58,7 @@ class PortfolioOptimiser:
             tsla_path (str): Path to the TSLA historical or forecasted data CSV file.
             plot_dir (str): Directory to save generated plots.
             col (str): Column name to use for optimisation.
-                            Defaults to "Predicted Return".
+                            Defaults to "Forecasted Return".
         """
         self.bnd_path = bnd_path
         self.spy_path = spy_path
