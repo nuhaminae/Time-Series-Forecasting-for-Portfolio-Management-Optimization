@@ -30,8 +30,8 @@ class ForecastTrend:
         model (keras.Model): The loaded LSTM model.
         predictions (list): List of scaled predictions.
         forecast_dates (pd.DatetimeIndex): Datetime index for the forecast period.
-        predicted_close (np.ndarray): Inverse transformed predicted closing prices.
-        prediction_df (pd.DataFrame): DataFrame containing the forecast results.
+        forecasted_close (np.ndarray): Inverse transformed forecasted closing prices.
+        forecasted_df (pd.DataFrame): DataFrame containing the forecast results.
     """
 
     def __init__(
@@ -76,8 +76,8 @@ class ForecastTrend:
         self.model = None
         self.predictions = None
         self.forecast_dates = None
-        self.predicted_close = None
-        self.prediction_df = None
+        self.forecasted_close = None
+        self.forecasted_df = None
 
         # Create output directories if they do not exist
         if not os.path.exists(self.plot_dir):
@@ -279,8 +279,8 @@ class ForecastTrend:
 
         Returns:
             tuple: A tuple containing the forecast DataFrame, forecast dates, and
-                    predicted close prices
-                    (prediction_df, forecast_dates, predicted_close).
+                    forecasted close prices
+                    (forecasted_df, forecast_dates, forecasted_close).
         """
         # Create a DataFrame for predictions
         # Create forecast dates
@@ -295,23 +295,23 @@ class ForecastTrend:
             .inverse_transform(np.array(self.predictions).reshape(-1, 1))
             .flatten()
         )
-        self.predicted_close = np.exp(true_preds)
+        self.forecasted_close = np.exp(true_preds)
 
-        prediction_df = pd.DataFrame(
+        forecasted_df = pd.DataFrame(
             {
                 "Date": self.forecast_dates,
-                "Predicted Close": self.predicted_close.flatten(),
+                "Forecasted Close": self.forecasted_close.flatten(),
             }
         )
 
-        prediction_df["Predicted Volatility"] = (
-            prediction_df["Predicted Close"].rolling(window=30).std()
+        forecasted_df["Forecasted Volatility"] = (
+            forecasted_df["Forecasted Close"].rolling(window=30).std()
         )
-        prediction_df["Predicted Return"] = prediction_df[
-            "Predicted Close"
+        forecasted_df["Forecasted Return"] = forecasted_df[
+            "Forecasted Close"
         ].pct_change()
-        prediction_df["Predicted Trend"] = (
-            prediction_df["Predicted Close"].rolling(window=30).mean()
+        forecasted_df["Forecasted Trend"] = (
+            forecasted_df["Forecasted Close"].rolling(window=30).mean()
         )
 
         # Estimate residual standard deviation from last known window
@@ -322,24 +322,28 @@ class ForecastTrend:
         std_dev = residuals.std()
 
         # Compute confidence bounds (95% CI)
-        prediction_df["Upper Bound"] = prediction_df["Predicted Close"] + 1.96 * std_dev
-        prediction_df["Lower Bound"] = prediction_df["Predicted Close"] - 1.96 * std_dev
+        forecasted_df["Upper Bound"] = (
+            forecasted_df["Forecasted Close"] + 1.96 * std_dev
+        )
+        forecasted_df["Lower Bound"] = (
+            forecasted_df["Forecasted Close"] - 1.96 * std_dev
+        )
 
         # Store for plotting
-        self.upper_bound = prediction_df["Upper Bound"]
-        self.lower_bound = prediction_df["Lower Bound"]
+        self.upper_bound = forecasted_df["Upper Bound"]
+        self.lower_bound = forecasted_df["Lower Bound"]
 
         # Print the DataFrame head
-        display(prediction_df.head())
+        display(forecasted_df.head())
 
         output_path = os.path.join(
-            self.processed_dir, f"{self.asset_name}_prediction_df.csv"
+            self.processed_dir, f"{self.asset_name}_forecasted_df.csv"
         )
-        prediction_df.to_csv(output_path, index=True)
+        forecasted_df.to_csv(output_path, index=True)
         print(f"\n💾 Forecast DataFrame saved to {self.safe_relpath(output_path)}")
 
-        self.prediction_df = prediction_df
-        return self.prediction_df, self.forecast_dates, self.predicted_close
+        self.forecasted_df = forecasted_df
+        return self.forecasted_df, self.forecast_dates, self.forecasted_close
 
     def plot_forecast(self):
         """
@@ -354,10 +358,10 @@ class ForecastTrend:
         historical_log_close = self.df["Log Close"].values
 
         historical_close = np.exp(historical_log_close)
-        predicted_close = self.prediction_df["Predicted Close"]
-        predicted_vol = self.prediction_df["Predicted Volatility"]
-        predicted_return = self.prediction_df["Predicted Return"]
-        predicted_trend = self.prediction_df["Predicted Trend"]
+        forecasted_close = self.forecasted_df["Forecasted Close"]
+        forecasted_vol = self.forecasted_df["Forecasted Volatility"]
+        forecasted_return = self.forecasted_df["Forecasted Return"]
+        forecasted_trend = self.forecasted_df["Forecasted Trend"]
 
         # Plot
         fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
@@ -365,14 +369,14 @@ class ForecastTrend:
         ax1.plot(self.df["Date"], self.df["Trend"], label="Historical Trend")
         ax1.plot(
             self.forecast_dates,
-            predicted_close,
+            forecasted_close,
             label="Forecasted Close",
             color="Green",
             linestyle="--",
         )
         ax1.plot(
             self.forecast_dates,
-            predicted_trend,
+            forecasted_trend,
             label="Forecasted Trend",
             color="Yellow",
             linestyle="--",
@@ -387,8 +391,8 @@ class ForecastTrend:
         )
 
         ax1.set_title(
-            f"{self.asset_name} - Recursive Closing Price, Trend, \
-                Return and Volatility Forecast ({self.steps} steps)"
+            f"{self.asset_name} - Recursive Closing Price, Trend, Return and \
+                Volatility Forecast ({self.steps} steps)"
         )
         ax1.set_ylabel("Close Price")
         ax1.legend()
@@ -403,7 +407,7 @@ class ForecastTrend:
         )
         ax2.plot(
             self.forecast_dates,
-            predicted_vol,
+            forecasted_vol,
             label="Forecasted Volatility",
             color="Green",
             linestyle="--",
@@ -421,7 +425,7 @@ class ForecastTrend:
         )
         ax3.plot(
             self.forecast_dates,
-            predicted_return,
+            forecasted_return,
             label="Forecasted Return",
             color="Green",
             linestyle="--",
