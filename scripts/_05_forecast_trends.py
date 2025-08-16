@@ -314,6 +314,21 @@ class ForecastTrend:
             prediction_df["Predicted Close"].rolling(window=30).mean()
         )
 
+        # Estimate residual standard deviation from last known window
+        recent_log_close = self.df["Log Close"].iloc[-self.look_back :]
+        recent_close = np.exp(recent_log_close)
+        recent_trend = recent_close.rolling(window=30).mean()
+        residuals = recent_close - recent_trend
+        std_dev = residuals.std()
+
+        # Compute confidence bounds (95% CI)
+        prediction_df["Upper Bound"] = prediction_df["Predicted Close"] + 1.96 * std_dev
+        prediction_df["Lower Bound"] = prediction_df["Predicted Close"] - 1.96 * std_dev
+
+        # Store for plotting
+        self.upper_bound = prediction_df["Upper Bound"]
+        self.lower_bound = prediction_df["Lower Bound"]
+
         # Print the DataFrame head
         display(prediction_df.head())
 
@@ -362,11 +377,19 @@ class ForecastTrend:
             color="Yellow",
             linestyle="--",
         )
+        ax1.fill_between(
+            self.forecast_dates,
+            self.lower_bound,
+            self.upper_bound,
+            color="red",
+            alpha=0.2,
+            label="95% Confidence Interval",
+        )
+
         ax1.set_title(
             f"{self.asset_name} - Recursive Closing Price, Trend, \
                 Return and Volatility Forecast ({self.steps} steps)"
         )
-        ax1.set_xlabel("Date")
         ax1.set_ylabel("Close Price")
         ax1.legend()
         ax1.grid(True)
@@ -386,7 +409,6 @@ class ForecastTrend:
             linestyle="--",
         )
         ax2.set_ylabel("Volatility")
-        ax2.set_xlabel("Date")
         ax2.legend(loc="upper left")
         ax2.grid(True)
 
