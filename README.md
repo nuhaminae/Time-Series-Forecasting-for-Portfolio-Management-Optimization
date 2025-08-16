@@ -8,13 +8,13 @@
 
 ## Overview
 
-This project tackles the GMF Investments challenge by applying time series forecasting to real-world financial data. The goal is to build predictive models for Tesla (TSLA) stock prices, compare classical and deep learning approaches, and use those insights to optimise a multi-asset portfolio. The project spans five tasks: data preprocessing, model development, future forecasting, portfolio optimisation, and strategy backtesting.
+This project tackles the GMF Investments challenge by applying time series forecasting to real-world financial data. The goal is to build forecasting models for Tesla (TSLA) stock prices, compare classical and deep learning approaches, and use those insights to optimise a multi-asset portfolio. The project spans five tasks: data preprocessing, model development, future forecasting, portfolio optimisation, and strategy backtesting.
 
 ---
 
 ## Key Features
 
-- **ARIMA and LSTM Forecasting**: Implements both classical and deep learning models for time series prediction.
+- **ARIMA and LSTM Forecasting**: Implements both classical and deep learning models for time series forecasting.
 - **Walk-forward Validation**: Robust evaluation using rolling forecasts to simulate real-world deployment.
 - **Model Comparison**: Evaluates trade-offs between interpretability and performance across ARIMA and LSTM.
 - **Portfolio Optimisation**: Uses PyPortfolioOpt to construct efficient portfolios based on forecasted and historical returns.
@@ -39,7 +39,7 @@ This project tackles the GMF Investments challenge by applying time series forec
 
 ## Project Background
 
-Guide Me in Finance (GMF) Investments is a forward-thinking financial advisory firm that leverages data-driven insights to optimise client portfolios. This challenge simulates the role of a financial analyst tasked with forecasting market trends and constructing optimal portfolios using historical data and predictive modeling. The challenge emphasises the limitations of pure price prediction and encourages the use of forecasts as inputs to broader decision-making frameworks.
+Guide Me in Finance (GMF) Investments is a forward-thinking financial advisory firm that leverages data-driven insights to optimise client portfolios. This challenge simulates the role of a financial analyst tasked with forecasting market trends and constructing optimal portfolios using historical data and forecasting modeling. The challenge emphasises the limitations of pure price forecasting and encourages the use of forecasts as inputs to broader decision-making frameworks.
 
 ---
 
@@ -276,12 +276,12 @@ dvc pull
 📉 **Daily Returns**
 
 - Daily returns are tightly clustered around zero, rarely exceeding ±2%.
-- This stability supports predictable performance and justifies its dominant weight in the optimised portfolio.
+- This stability supports forecastable performance and justifies its dominant weight in the optimised portfolio.
 
 🚨 **Outlier Detection**
 
 - Outliers are extremely rare and mild, confirming BND’s resilience during turbulent periods.
-- Its return distribution is tight and predictable, with minimal exposure to extreme events.
+- Its return distribution is tight and forecastable, with minimal exposure to extreme events.
 
 🧠 **Implications**
 
@@ -363,7 +363,7 @@ Forecasted prices closely track historical movements, preserving SPY’s steady 
 Volatility forecasts remain stable and well within historical norms, with no signs of regime shifts or structural breaks. The smooth continuation of volatility trends suggests minimal risk of unexpected spikes, supporting SPY’s role in risk-balanced portfolios.
 
 📉 **Forecasted Daily Return**
-Forecasted returns exhibit low dispersion and consistent amplitude, mirroring SPY’s historical behaviour. While no confidence interval is plotted here, the return profile inherits the stability of the underlying price forecast, further validating SPY’s predictability.
+Forecasted returns exhibit low dispersion and consistent amplitude, mirroring SPY’s historical behaviour. While no confidence interval is plotted here, the return profile inherits the stability of the underlying price forecast, further validating SPY’s forecastability.
 
 > 🧠 SPY’s forecasted behaviour confirms its utility as a benchmark equity anchor. With high confidence in price stability and low volatility risk, it remains ideal for passive exposure and portfolio insulation against asset-specific shocks.
 
@@ -371,7 +371,7 @@ Forecasted returns exhibit low dispersion and consistent amplitude, mirroring SP
 ![BND Forecast](insights/forecasted/BND_close_trend_vol_return_forecast.png)
 
 📈 **Forecasted Close Price & Trend**
-The forecasted trajectory closely mirrors historical movement with minimal deviation, reinforcing BND’s predictability. The shaded 95% confidence interval remains exceptionally narrow across the forecast horizon, indicating high model certainty and low dispersion risk. This tight band underscores BND’s role as a stabilising asset, ideal for anchoring portfolios during uncertain market phases.
+The forecasted trajectory closely mirrors historical movement with minimal deviation, reinforcing BND’s forecastabilityability. The shaded 95% confidence interval remains exceptionally narrow across the forecast horizon, indicating high model certainty and low dispersion risk. This tight band underscores BND’s role as a stabilising asset, ideal for anchoring portfolios during uncertain market phases.
 
 🔥 **Forecasted Volatility**
 Volatility forecasts remain subdued and well within historical bounds. The smooth continuation of volatility trends, without signs of regime shifts or structural breaks, confirms BND’s low-risk profile and suitability for capital preservation strategies.
@@ -387,8 +387,8 @@ Forecasted returns are tightly clustered and stable, echoing BND’s historical 
 
 Using Modern Portfolio Theory (MPT) via PyPortfolioOpt, we constructed optimal portfolios under two scenarios: one using forecasted returns (LSTM-driven for TSLA) and another using historical returns for all assets. Both approaches target maximum Sharpe ratio and minimum volatility configurations.
 
-![Forecasted Frontier](insights/portfolio/enhanced_frontier_Predicted%20Return.png)
-![Forecasted Allocation](insights/portfolio/allocation_comparison_Predicted%20Return.png)
+![Forecasted Frontier](insights/portfolio/enhanced_frontier_Forecasted%20Return.png)
+![Forecasted Allocation](insights/portfolio/allocation_comparison_Forecasted%20Return.png)
 ![Historical Frontier](insights/portfolio/enhanced_frontier_Daily%20Return.png)
 ![Historical Allocation](insights/portfolio/allocation_comparison_Daily%20Return.png)
 
@@ -473,7 +473,7 @@ This project demonstrates a robust, end-to-end pipeline for time series forecast
 
 🔍 **Key Achievements**:
 
-- **Exploratory Data Analysis (EDA)** revealed distinct behavioural profiles across TSLA, SPY, and BND, highlighting TSLA’s volatility, SPY’s stability, and BND’s predictability.
+- **Exploratory Data Analysis (EDA)** revealed distinct behavioural profiles across TSLA, SPY, and BND, highlighting TSLA’s volatility, SPY’s stability, and BND’s forecastabilityability.
 - **Outlier detection** and rolling volatility plots provided statistical justification for asset weighting and model selection.
 - **Model evaluation** confirmed LSTM’s superiority over ARIMA, especially for TSLA, with significantly higher R-squared scores and faster training times.
 - **Fine-tuned LSTM forecasts** captured directional trends and volatility dynamics across all assets, enabling forward-looking portfolio construction.
