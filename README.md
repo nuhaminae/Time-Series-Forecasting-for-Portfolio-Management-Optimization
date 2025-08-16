@@ -339,40 +339,47 @@ The fine-tuned LSTM model demonstrates strong adaptability across asset classes,
 
 ### Forecasting Trends
 
-This section presents the fine-tuned LSTM forecasts for TSLA, SPY, and BND, highlighting expected price trajectories, volatility behaviour, and daily returns. While each asset exhibits unique characteristics, several modelling patterns emerge across all three.
+This section presents the fine-tuned LSTM forecasts for TSLA, SPY, and BND, highlighting expected price trajectories, volatility behaviour, and daily returns. While each asset exhibits unique characteristics, several modelling patterns emerge across all three, particularly in how uncertainty evolves across the forecast horizon.
 
 **TSLA Inc**
 ![TSLA Forecast](insights/forecasted/TSLA_close_trend_vol_return_forecast.png)
 
-📈 **Forecasted Close Price & Trend**: The model captures TSLA’s upward momentum and cyclical behaviour, with a clear divergence between historical and forecasted trends around mid-2025, suggesting a potential inflection point.
+📈 **Forecasted Close Price & Trend**: The model captures TSLA’s upward momentum and cyclical behaviour, with a clear divergence between historical and forecasted trends around mid-2025—suggesting a potential inflection point. The shaded 95% confidence interval surrounding the forecasted close price expands notably beyond Q3 2025, indicating rising uncertainty in long-term projections. This widening band reflects the model’s reduced certainty as it extrapolates further from the training window, reinforcing the need for tactical rebalancing and scenario-aware portfolio construction.
 
-🔥 **Forecasted Volatility**: Forecasted volatility tapers within historical bounds, supporting TSLA’s inclusion in tactical, risk-managed allocations.
+🔥 **Forecasted Volatility**: Volatility forecasts remain bounded within historical norms, with a gentle tapering trend. While no explicit confidence interval is plotted, the model’s consistency across the forecast horizon suggests stable risk expectations. TSLA’s volatility profile supports its role in tactical allocations, especially when paired with stabilising assets like BND.
 
-📉 **Forecasted Daily Return**: Slight compression in amplitude aligns with projected volatility decline, reinforcing the model’s temporal coherence.
+📉 **Forecasted Daily Return**
+Forecasted returns exhibit compressed amplitude and reduced dispersion, consistent with the projected volatility decline. The absence of a confidence band here is acceptable given the derivative nature of return forecasts from price, but the narrowing range still signals a maturing growth phase with moderated upside potential.
 
-> 🧠 TSLA’s forecasted behaviour suggests a maturing growth phase with moderated volatility. Suitable for directional bets when balanced against SPY and BND.
+> 🧠 TSLA’s forecasted trajectory suggests a transition from high-growth volatility to more stable, cyclical behaviour. While directional bets remain viable, the expanding uncertainty in price forecasts beyond Q4 2025 warrants cautious sizing and strategic hedging—especially when balanced against SPY’s broad exposure and BND’s defensive characteristics.
 
 **S&P 500 ETF (SPY)**
 ![SPY Forecast](insights/forecasted/SPY_close_trend_vol_return_forecast.png)
 
-📈 **Forecasted Close Price & Trend**: Forecasted prices closely track historical movements, maintaining SPY’s steady growth trajectory.
+📈 **Forecasted Close Price & Trend**
+Forecasted prices closely track historical movements, preserving SPY’s steady growth trajectory. The shaded 95% confidence interval remains narrow throughout the forecast horizon, indicating high model certainty and low dispersion risk. This tight band reinforces SPY’s reliability as a stable equity anchor, especially for long-term passive exposure.
 
-🔥 **Forecasted Volatility**: Stable and within historical norms, with no signs of regime shifts.
+🔥 **Forecasted Volatility**
+Volatility forecasts remain stable and well within historical norms, with no signs of regime shifts or structural breaks. The smooth continuation of volatility trends suggests minimal risk of unexpected spikes, supporting SPY’s role in risk-balanced portfolios.
 
-📉 **Forecasted Daily Return**: Low dispersion and consistent amplitude confirm SPY’s reliability.
+📉 **Forecasted Daily Return**
+Forecasted returns exhibit low dispersion and consistent amplitude, mirroring SPY’s historical behaviour. While no confidence interval is plotted here, the return profile inherits the stability of the underlying price forecast, further validating SPY’s predictability.
 
->🧠 SPY’s forecasted behaviour supports its role as a benchmark equity anchor, ideal for passive exposure and portfolio stability.
+> 🧠 SPY’s forecasted behaviour confirms its utility as a benchmark equity anchor. With high confidence in price stability and low volatility risk, it remains ideal for passive exposure and portfolio insulation against asset-specific shocks.
 
 **Vanguard Total Bond Market ETF (BND)**
 ![BND Forecast](insights/forecasted/BND_close_trend_vol_return_forecast.png)
 
-📈 **Forecasted Close Price & Trend**: Forecasted trajectory mirrors historical movement with minimal deviation, reinforcing BND’s predictability.
+📈 **Forecasted Close Price & Trend**
+The forecasted trajectory closely mirrors historical movement with minimal deviation, reinforcing BND’s predictability. The shaded 95% confidence interval remains exceptionally narrow across the forecast horizon, indicating high model certainty and low dispersion risk. This tight band underscores BND’s role as a stabilising asset, ideal for anchoring portfolios during uncertain market phases.
 
-🔥 **Forecasted Volatility**: Remains subdued, confirming its low-risk profile.
+🔥 **Forecasted Volatility**
+Volatility forecasts remain subdued and well within historical bounds. The smooth continuation of volatility trends, without signs of regime shifts or structural breaks, confirms BND’s low-risk profile and suitability for capital preservation strategies.
 
-📉 **Forecasted Daily Return**: Tightly clustered and stable, ideal for capital preservation.
+📉 **Forecasted Daily Return**
+Forecasted returns are tightly clustered and stable, echoing BND’s historical behaviour. While no confidence interval is plotted here, the return profile inherits the stability of the underlying price forecast, reinforcing its reliability for income-focused allocations.
 
->🧠 BND’s forecasted behaviour makes it a prime candidate for volatility dampening and risk-adjusted diversification.
+> 🧠 BND’s forecasted behaviour positions it as a prime candidate for volatility dampening and risk-adjusted diversification. With high confidence in price stability and minimal forecast uncertainty, it serves as a dependable counterbalance to TSLA’s growth volatility and SPY’s market exposure.
 
 ---
 
